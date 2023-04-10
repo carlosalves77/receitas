@@ -13,7 +13,8 @@ export function Instructions({ data, index }) {
 const style = StyleSheet.create({
   container: {
     flexDirection: "row",
-    padding: 14,
+    padding: 12,
+    justifyContent: "flex-start",
   },
   ingredientsIndex: {
     fontSize: 18,

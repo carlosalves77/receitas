@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,19 +6,22 @@ import {
   Pressable,
   ScrollView,
   Image,
+  Modal,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
 import { Ingredients } from "../../components/ingredients";
 import { Instructions } from "../../components/instructions";
+import { Video } from "../../components/video";
 
 import { Entypo, AntDesign, Feather } from "@expo/vector-icons";
 
 export function Detail() {
   const navigation = useNavigation();
-
   const route = useRoute();
   const { data } = route.params;
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -31,13 +34,17 @@ export function Detail() {
     });
   }, [navigation, data.name]);
 
+  function handleOpenVideo() {
+    setModalVisible(true);
+  }
+
   return (
     <ScrollView
       style={styles.container}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: 14 }}
     >
-      <Pressable onPress={() => null}>
+      <Pressable onPress={() => handleOpenVideo()}>
         <View style={styles.playIcon}>
           <AntDesign name="playcircleo" size={48} color="#FAFAFA" />
         </View>
@@ -64,6 +71,13 @@ export function Detail() {
       {data.instructions.map((item, index) => (
         <Instructions key={item.id} data={item} index={index} />
       ))}
+
+      <Modal visible={modalVisible} animationType="slide">
+        <Video
+          handleClose={() => setModalVisible(false)}
+          videoUrl={data.video}
+        />
+      </Modal>
     </ScrollView>
   );
 }
