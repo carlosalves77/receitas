@@ -7,12 +7,15 @@ import {
   ScrollView,
   Image,
   Modal,
+  Share,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
 import { Ingredients } from "../../components/ingredients";
 import { Instructions } from "../../components/instructions";
 import { Video } from "../../components/video";
+
+import { isFavorite, saveFavorites, removeItem } from "../../utils/storage";
 
 import { Entypo, AntDesign, Feather } from "@expo/vector-icons";
 
@@ -22,20 +25,53 @@ export function Detail() {
   const { data } = route.params;
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [favorite, setFavorite] = useState(false);
 
   useLayoutEffect(() => {
+    async function getStatusFavorites() {
+      const receipeFavorite = await isFavorite(data);
+      setFavorite(receipeFavorite);
+    }
+
+    getStatusFavorites();
+
     navigation.setOptions({
       title: data.name,
       headerRight: () => (
-        <Pressable onPress={() => console.log("testando")}>
-          <Entypo name="heart" size={24} color="#FF4141" />
+        <Pressable onPress={() => handleFavoriteReceipe(data)}>
+          {favorite ? (
+            <Entypo name="heart" size={24} color="#FF4141" />
+          ) : (
+            <Entypo name="heart-outlined" size={24} color="#FF4141" />
+          )}
         </Pressable>
       ),
     });
-  }, [navigation, data.name]);
+  }, [navigation, data.name, favorite]);
+
+  async function handleFavoriteReceipe(receipe) {
+    if (favorite) {
+      await removeItem(receipe.id);
+      setFavorite(false);
+    } else {
+      await saveFavorites("@appreceitas", receipe);
+      setFavorite(true);
+    }
+  }
 
   function handleOpenVideo() {
     setModalVisible(true);
+  }
+
+  async function shareReceipe() {
+    try {
+      await Share.share({
+        message: `Olha que receita legal que eu encontrei no app Receitas: ${data.name}\n ingredientes: ${data.total_ingredients} vi lá no epp receita fácil`,
+        url: data.video,
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
   return (
@@ -57,7 +93,7 @@ export function Detail() {
             ingredientes ({data.total_ingredients})
           </Text>
         </View>
-        <Pressable>
+        <Pressable onPress={() => shareReceipe()}>
           <Feather name="share-2" size={24} color="#121212" />
         </Pressable>
       </View>
