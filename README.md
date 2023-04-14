@@ -40,6 +40,7 @@ npm run dev
 - [Axios](https://github.com/axios/axios): Promise based HTTP client
 - [WebView](https://reactnative.dev/docs/0.61/webview): WebView renders web content in a native view.
 - [Json-Server](https://github.com/typicode/json-server): Get a full fake REST API.
+- [Async Storage](https://reactnative.dev/docs/asyncstorage): AsyncStorage is an unencrypted, asynchronous, persistent, key-value storage system that is global to the app.
 
 
 ### App Screenshots
