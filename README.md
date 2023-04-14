@@ -35,7 +35,6 @@ npm run dev
 ### 🛠 Tech and Libraries
 
 - [React Native](https://reactnative.dev/)
-- [JavaScript](https://expo.dev/)
 - [Expo](https://expo.dev/)
 - [React Navigation](https://reactnavigation.org/): Routing and navigation
 - [Axios](https://github.com/axios/axios): Promise based HTTP client
